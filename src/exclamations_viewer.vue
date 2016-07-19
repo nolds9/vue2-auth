@@ -16,6 +16,14 @@
           :onRemove='handleExclamationRemoved' >
         </Exclamation-List>
       </div>
+      <div class="col-md-4">
+        <Exclamation-List
+          :user='user'
+          title='Your Exclamations'
+          :exclamations='userExclamations'
+          :onRemove='handleExclamationRemoved' >
+        </Exclamation-List>
+      </div>
     </div>
   </div>
 </template>
@@ -52,5 +60,10 @@
           });
       },
     },
+    computed: {
+      userExclamations () {
+        return this.exclamations.filter(exc => exc.user === this.user.username);
+      }
+    }
   };
 </script>
