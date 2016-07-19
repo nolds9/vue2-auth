@@ -1,0 +1,65 @@
+<template lang="html">
+  <div>
+    <div class="input-container">
+      <div class="form-group">
+        <label for="searchTerm">Search:</label>
+        <input
+          type="text"
+          v-model='searchTerm'
+          placeholder="Enter Search Term"
+          class="form-control" >
+      </div>
+    </div>
+    <ExclamationList
+      :user='user'
+      :onRemove='onRemove'
+      title='Filtered Exclamations'
+      :exclamations='exclamationsToShow'>
+    </ExclamationList>
+  </div>
+</template>
+
+<script>
+  import ExclamationList from './exclamation_list.vue';
+
+  export default {
+    data() {
+      return {
+        searchTerm: '',
+      }
+    },
+    props: {
+      exclamations: {
+        type: Array,
+        default: () => ([]),
+      },
+      onRemove: {
+        default: () => {},
+      },
+      user: {
+        default: {
+
+        },
+      },
+    },
+    computed: {
+      exclamationsToShow() {
+        let filteredExclamations = this.exclamations;
+        this.searchTerm.split(' ')
+          .map(t => t.split(':'))
+          .forEach(([type, query]) => {
+            if(!query) return;
+            if(type === 'user') {
+              filteredExclamations = filteredExclamations.filter(ex => ex.user.match(query));
+            } else if (type === 'contains') {
+              filteredExclamations = filteredExclamations.filter(ex => ex.text.match(query));
+            }
+          });
+        return filteredExclamations
+      },
+    },
+    components: {
+      ExclamationList,
+    }
+  }
+</script>

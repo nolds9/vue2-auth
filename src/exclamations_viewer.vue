@@ -13,7 +13,7 @@
           :user='user'
           title='All Exclamations'
           :exclamations='exclamations'
-          :onRemove='handleExclamationRemoved' >
+          :onRemove='handleExclamationRemoval' >
         </Exclamation-List>
       </div>
       <div class="col-md-4">
@@ -21,7 +21,15 @@
           :user='user'
           title='Your Exclamations'
           :exclamations='userExclamations'
-          :onRemove='handleExclamationRemoved' >
+          :onRemove='handleExclamationRemoval' >
+        </Exclamation-List>
+      </div>
+      <div class="col-md-4">
+        <Exclamation-Search-List
+          :user='user'
+          title='Your Exclamations'
+          :exclamations='exclamations'
+          :onRemove='handleExclamationRemoval' >
         </Exclamation-List>
       </div>
     </div>
@@ -31,6 +39,7 @@
 <script>
   import axios from 'axios';
   import ExclamationList from './exclamation_list.vue';
+  import ExclamationSearchList from './exclamation_search_list.vue';
 
   export default {
     name: 'ExclamationsViewer',
@@ -51,9 +60,10 @@
     },
     components: {
       ExclamationList,
+      ExclamationSearchList,
     },
     methods: {
-      handleExclamationRemoved(id) {
+      handleExclamationRemoval(id) {
         axios.delete(`/api/exclamations/${id}`)
           .then(() => {
             this.exclamations = this.exclamations.filter(e => e.id !== id)
