@@ -7,6 +7,11 @@
 
 <template>
   <div class="container">
+    <div class="row add-form-container" v-if="canAdd()">
+      <div class="col-md-12">
+        <Exclamation-Add-Form :onAdd="handleExclamationAdded"><Exclamation-Add-Form>
+      </div>
+    </div>
     <div class="row exclamations-viewer">
       <div class="col-md-4">
         <Exclamation-List
@@ -40,6 +45,7 @@
   import axios from 'axios';
   import ExclamationList from './exclamation_list.vue';
   import ExclamationSearchList from './exclamation_search_list.vue';
+  import ExclamationAddForm from './exclamation_add_form.vue';
 
   export default {
     name: 'ExclamationsViewer',
@@ -61,6 +67,7 @@
     components: {
       ExclamationList,
       ExclamationSearchList,
+      ExclamationAddForm,
     },
     methods: {
       handleExclamationRemoval(id) {
@@ -68,6 +75,14 @@
           .then(() => {
             this.exclamations = this.exclamations.filter(e => e.id !== id)
           });
+      },
+      handleExclamationAdded(text) {
+        axios.post('/api/exclamations', { text }).then( ({ data }) => {
+            this.exclamations = [data.exclamation].concat(this.exclamations)
+        });
+      },
+      canAdd() {
+        return this.user.scopes.includes('add');
       },
     },
     computed: {
